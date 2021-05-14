@@ -4,7 +4,7 @@ services:
   client:
     image: sawfood-client
     container_name: sawfood-client
-    build: ./client
+    build: ./food_client
     volumes:
       - ./food_client/public/:/usr/local/apache2/htdocs/
     expose:
