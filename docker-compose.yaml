@@ -2,11 +2,11 @@ version: '2.1'
 
 services:
   client:
-    image: client
-    container_name: client
+    image: sawfood-client
+    container_name: sawfood-client
     build: ./client
     volumes:
-      - ./client/public/:/usr/local/apache2/htdocs/
+      - ./fish_client/public/:/usr/local/apache2/htdocs/
     expose:
       - 80
     ports:
