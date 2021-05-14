@@ -6,7 +6,7 @@ services:
     container_name: sawfood-client
     build: ./client
     volumes:
-      - ./fish_client/public/:/usr/local/apache2/htdocs/
+      - ./food_client/public/:/usr/local/apache2/htdocs/
     expose:
       - 80
     ports:
