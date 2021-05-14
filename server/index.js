@@ -16,30 +16,25 @@
  */
 'use strict'
 
-const m = require('mithril')
-const _ = require('lodash')
-const octicons = require('octicons')
+const express = require('express')
+const db = require('./db')
+const blockchain = require('./blockchain')
+const protos = require('./blockchain/protos')
+const api = require('./api')
+const config = require('./system/config')
 
-/**
- * Returns a header styled to be a page title
- */
-const title = title => m('h3.text-center.mb-3', title)
+const PORT = config.PORT
+const app = express()
 
-/**
- * Returns a row of any number of columns, suitable for placing in a container
- */
-const row = columns => {
-  if (!_.isArray(columns)) columns = [columns]
-  return m('.row', columns.map(col => m('.col-md', col)))
-}
-
-/**
- * Returns a mithriled icon from Github's octicon set
- */
-const icon = name => m.trust(octicons[name].toSVG())
-
-module.exports = {
-  title,
-  row,
-  icon
-}
+Promise.all([
+  db.connect(),
+  protos.compile(),
+  blockchain.connect()
+])
+  .then(() => {
+    app.use('/', api)
+    app.listen(PORT, () => {
+      console.log(`Supply Chain Server listening on port ${PORT}`)
+    })
+  })
+  .catch(err => console.error(err.message))

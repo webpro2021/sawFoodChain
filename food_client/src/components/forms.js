@@ -47,7 +47,7 @@ const field = (onValue, attrs = null) => {
 /**
  * Returns a labeled input field which passes its value to a callback
  */
-const input = (type, onValue, label, required) => {
+const input = (type, onValue, label, required = true) => {
   return group(label, field(onValue, { type, required }))
 }
 
@@ -110,7 +110,7 @@ const MultiSelect = {
           {
             'data-toggle': 'dropdown',
           }, vnode.attrs.label),
-        m('.dropdown-menu.w-100', {className: vnode.state.show ? 'show' : ''},
+        m('.dropdown-menu.w-100',
           m("a.dropdown-item[href='#']", {
             onclick: (e) => {
               e.preventDefault()

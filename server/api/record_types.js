@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Intel Corporation
+ * Copyright 2018 Cargill Incorporated
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,25 @@
  */
 'use strict'
 
-const m = require('mithril')
 const _ = require('lodash')
-const octicons = require('octicons')
+const { NotFound } = require('./errors')
+const db = require('../db/record_types')
 
-/**
- * Returns a header styled to be a page title
- */
-const title = title => m('h3.text-center.mb-3', title)
+const FILTER_KEYS = ['name']
 
-/**
- * Returns a row of any number of columns, suitable for placing in a container
- */
-const row = columns => {
-  if (!_.isArray(columns)) columns = [columns]
-  return m('.row', columns.map(col => m('.col-md', col)))
+const fetch = ({ typeName }) => {
+  return db.fetch(typeName)
+    .then(resourceType => {
+      if (!resourceType) {
+        throw new NotFound(`No resource type with name: ${typeName}`)
+      }
+      return resourceType
+    })
 }
 
-/**
- * Returns a mithriled icon from Github's octicon set
- */
-const icon = name => m.trust(octicons[name].toSVG())
+const list = params => db.list(_.pick(params, FILTER_KEYS))
 
 module.exports = {
-  title,
-  row,
-  icon
+  fetch,
+  list
 }

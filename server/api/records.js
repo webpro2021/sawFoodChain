@@ -16,30 +16,25 @@
  */
 'use strict'
 
-const m = require('mithril')
 const _ = require('lodash')
-const octicons = require('octicons')
+const db = require('../db/records')
 
-/**
- * Returns a header styled to be a page title
- */
-const title = title => m('h3.text-center.mb-3', title)
+const FILTER_KEYS = ['recordId', 'recordType']
 
-/**
- * Returns a row of any number of columns, suitable for placing in a container
- */
-const row = columns => {
-  if (!_.isArray(columns)) columns = [columns]
-  return m('.row', columns.map(col => m('.col-md', col)))
+const fetchProperty = ({recordId, propertyName}) => {
+  return db.fetchProperty(recordId, propertyName)
 }
 
-/**
- * Returns a mithriled icon from Github's octicon set
- */
-const icon = name => m.trust(octicons[name].toSVG())
+const fetchRecord = ({recordId, authedKey}) => {
+  return db.fetchRecord(recordId, authedKey)
+}
+
+const listRecords = params => {
+  return db.listRecords(params.authedKey, _.pick(params, FILTER_KEYS))
+}
 
 module.exports = {
-  title,
-  row,
-  icon
+  fetchProperty,
+  fetchRecord,
+  listRecords
 }

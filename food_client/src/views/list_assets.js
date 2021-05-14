@@ -25,7 +25,7 @@ const {getPropertyValue, getLatestPropertyUpdateTime, getOldestPropertyUpdateTim
 
 const PAGE_SIZE = 50
 
-const FishList = {
+const AssetList = {
   oninit (vnode) {
     vnode.state.records = []
     vnode.state.filteredRecords = []
@@ -33,7 +33,7 @@ const FishList = {
     vnode.state.currentPage = 0
 
     const refresh = () => {
-      api.get('records?recordType=fish').then((records) => {
+      api.get('records?recordType=asset').then((records) => {
         vnode.state.records = records
         vnode.state.records.sort((a, b) => {
           return getLatestPropertyUpdateTime(b) - getLatestPropertyUpdateTime(a)
@@ -53,12 +53,12 @@ const FishList = {
   view (vnode) {
     let publicKey = api.getPublicKey()
     return [
-      m('.fish-table',
+      m('.asset-table',
         m('.row.btn-row.mb-2', _controlButtons(vnode, publicKey)),
         m(Table, {
           headers: [
             'Serial Number',
-            'Species',
+            'Type',
             'Added',
             'Updated',
             'Updates'
@@ -67,10 +67,10 @@ const FishList = {
             vnode.state.currentPage * PAGE_SIZE,
             (vnode.state.currentPage + 1) * PAGE_SIZE)
                 .map((rec) => [
-                  m(`a[href=/fish/${rec.recordId}]`, {
+                  m(`a[href=/assets/${rec.recordId}]`, {
                     oncreate: m.route.link
                   }, truncate(rec.recordId, { length: 32 })),
-                  getPropertyValue(rec, 'species'),
+                  getPropertyValue(rec, 'type'),
                   // This is the "created" time, synthesized from properties
                   // added on the initial create
                   formatTimestamp(getOldestPropertyUpdateTime(rec)),
@@ -120,4 +120,4 @@ const _pagingButtons = (vnode) =>
     maxPage: Math.floor(vnode.state.filteredRecords.length / PAGE_SIZE)
   })
 
-module.exports = FishList
+module.exports = AssetList
